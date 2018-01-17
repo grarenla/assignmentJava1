@@ -56,3 +56,35 @@ public class MainThread {
         } while (repeat.equals("y"));
     }
 }
+/*
+main
+    quan ly sinh vien
+    -----------------
+        Danh sach sinh vien
+            lấy dữ liệu từ DB
+                tạo connection
+                tạo PreparedStatement
+                    tạo StringBuilbder để chứa mã SQL
+                        đẩy StringBuilbder vào PreparedStatement
+                đẩy PreparedStatement lên DB
+                tạo resultSet chứa dữ liệu trả về từ DB
+                sử dụng vòng lặp để lưu giá trị của các trường trong bảng rồi
+                    tạo 1 đối tượng student với những giá trị lấy được từ bảng
+                    add đối tượng đó vào arrayList
+            in danh sách sinh viên
+                dùng vòng lặp duyệt qua từng list trong array
+
+
+        Xem chi tiet sinh vien theo rollNumber
+        them sinh vien
+        --------------
+            tạo connection
+            tạo PreparedStatement
+                tạo StringBuilbder để chứa mã SQL
+                    đẩy StringBuilbder vào PreparedStatement
+            đẩy PreparedStatement lên DB
+        sua sinh vien
+        Xoa sinh vien
+        Thoat
+    quan ly giao vien
+*/
