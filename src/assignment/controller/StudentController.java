@@ -5,9 +5,7 @@ import assignment.model.ConnectionHelper;
 import assignment.model.StudentModel;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -20,12 +18,18 @@ public class StudentController {
 
     public void printStudentList() {
         ArrayList<Student> list = model.getListStudent();
-        System.out.println("\tID\t\tRollNumber\t\t\t\tName\t\t\tPhone\t\t\t\t\tEmail\t\t\t\tStatus");
+        System.out.println("\t\tID\t\tRollNumber\t\t\t\tName\t\t\tPhone\t\t\t\t\tEmail\t\t\t\tCreateAt\t\t\t\tUpdateAt\t\t\t\tStatus");
         for (int i = 0; i < list.size(); i++) {
-//            Student student = list.get(i);
-            System.out.printf("%6d %13s %21s %16s %25s %14s\n", list.get(i).getId(), list.get(i).getRollNumber(), list.get(i).getName(), list.get(i).getPhone(), list.get(i).getEmail(), list.get(i).getStatus());
+            long createAtMini = list.get(i).getCreateAt();
+            SimpleDateFormat formatCreate = new SimpleDateFormat("dd/MM/yyyy ss:mm:hh");
+            String createAt = formatCreate.format(createAtMini);
+            long updateMini = list.get(i).getUpdateAt();
+            SimpleDateFormat formatUpdate = new SimpleDateFormat("dd/MM/yyyy ss:mm:hh");
+            String updateAt = formatUpdate.format(updateMini);
+            System.out.printf("%10d %13s %23s %15s %25s %22s %25s %13s\n", list.get(i).getId(), list.get(i).getRollNumber(), list.get(i).getName(), list.get(i).getPhone(), list.get(i).getEmail(), createAt, updateAt, list.get(i).getStatus());
         }
     }
+
     public void addStudent() {
         Student student = new Student();
         Scanner scan = new Scanner(System.in);
@@ -34,10 +38,7 @@ public class StudentController {
         while (true) {
             System.out.println("Please enter your name(>=7 character): ");
             String name = scan.nextLine();
-            Pattern pattern = Pattern.compile("[a-zA-Z]{7,20}");
-            Matcher matcher = pattern.matcher(name);
-            boolean isName = matcher.matches();
-            if (name.length() >= 7 && isName) {
+            if (name.length() >= 7) {
                 student.setName(name);
                 break;
             }
@@ -75,7 +76,7 @@ public class StudentController {
 
             System.out.println("Please enter your email(a12@xyz.abc): ");
             String email = scan.nextLine();
-            String reg = "^[a-zA-Z]+[0-9]*@[a-z]{3,10}\\.[a-z]{2,3}$";
+            String reg = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
             Pattern pattern = Pattern.compile(reg);
             Matcher matcher = pattern.matcher(email);
             boolean isEmail = matcher.matches();
@@ -86,6 +87,8 @@ public class StudentController {
             }
             System.err.println("The email you entered is not in the correct format.");
         }
+        student.setCreateAt(System.currentTimeMillis());
+        student.setUpdateAt(System.currentTimeMillis());
         model.insert(student);
     }
 
@@ -106,6 +109,14 @@ public class StudentController {
             System.out.println("Name: " + existStudent.getName());
             System.out.println("Phone: " + existStudent.getPhone());
             System.out.println("Email: " + existStudent.getEmail());
+            long createAtMini = existStudent.getCreateAt();
+            SimpleDateFormat formatCreate = new SimpleDateFormat("dd/MM/yyyy ss:mm:hh");
+            String createAt = formatCreate.format(createAtMini);
+            long updateMini = existStudent.getUpdateAt();
+            SimpleDateFormat formatUpdate = new SimpleDateFormat("dd/MM/yyyy ss:mm:hh");
+            String updateAt = formatUpdate.format(updateMini);
+            System.out.println("CreateAt: " + createAt);
+            System.out.println("UpdateAt: " + updateAt);
             System.out.println("Status: " + existStudent.getStatus());
             System.out.println("----------------------------------------");
 
@@ -113,10 +124,7 @@ public class StudentController {
             while (true) {
                 System.out.println("Please enter new name(>=7 character): ");
                 newName = scan.nextLine();
-                Pattern pattern = Pattern.compile("[a-zA-Z]{7,20}");
-                Matcher matcher = pattern.matcher(newName);
-                boolean isName = matcher.matches();
-                if (newName.length() >= 7 && isName) {
+                if (newName.length() >= 7) {
                     existStudent.setName(newName);
                     break;
                 }
@@ -142,7 +150,7 @@ public class StudentController {
             while (true) {
                 System.out.println("Please enter new email(a12@xyz.abc): ");
                 newEmail = scan.nextLine();
-                Pattern pattern = Pattern.compile("^[a-zA-Z]+[0-9]*@[a-z]{3,10}\\.[a-z]{2,3}$");
+                Pattern pattern = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");
                 Matcher matcher = pattern.matcher(newEmail);
                 boolean isEmail = matcher.matches();
                 if (isEmail) {
@@ -175,6 +183,14 @@ public class StudentController {
             System.out.println("Name: " + existStudent.getName());
             System.out.println("Phone: " + existStudent.getPhone());
             System.out.println("Email: " + existStudent.getEmail());
+            long createAtMini = existStudent.getCreateAt();
+            SimpleDateFormat formatCreate = new SimpleDateFormat("dd/MM/yyyy ss:mm:hh");
+            String createAt = formatCreate.format(createAtMini);
+            long updateMini = existStudent.getUpdateAt();
+            SimpleDateFormat formatUpdate = new SimpleDateFormat("dd/MM/yyyy ss:mm:hh");
+            String updateAt = formatUpdate.format(updateMini);
+            System.out.println("CreateAt: " + createAt);
+            System.out.println("UpdateAt: " + updateAt);
             System.out.println("Status: " + existStudent.getStatus());
             System.out.println("----------------------------------------");
 
@@ -206,6 +222,14 @@ public class StudentController {
             System.out.println("Name: " + existStudent.getName());
             System.out.println("Phone: " + existStudent.getPhone());
             System.out.println("Email: " + existStudent.getEmail());
+            long createAtMini = existStudent.getCreateAt();
+            SimpleDateFormat formatCreate = new SimpleDateFormat("dd/MM/yyyy ss:mm:hh");
+            String createAt = formatCreate.format(createAtMini);
+            long updateMini = existStudent.getUpdateAt();
+            SimpleDateFormat formatUpdate = new SimpleDateFormat("dd/MM/yyyy ss:mm:hh");
+            String updateAt = formatUpdate.format(updateMini);
+            System.out.println("CreateAt: " + createAt);
+            System.out.println("UpdateAt: " + updateAt);
             System.out.println("Status: " + existStudent.getStatus());
             System.out.println("----------------------------------------");
         }

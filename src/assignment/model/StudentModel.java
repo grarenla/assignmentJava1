@@ -29,8 +29,10 @@ public class StudentModel {
                 String name = rs.getString("name");
                 String phone = rs.getString("phone");
                 String email = rs.getString("email");
+                long createAt = rs.getLong("createAt");
+                long updateAt = rs.getLong("updateAt");
                 int status = rs.getInt("status");
-                Student student = new Student(id, rollNumber, name, phone, email, status);
+                Student student = new Student(id, rollNumber, name, phone, email, createAt, updateAt, status);
                 listStudent.add(student);
             }
         } catch (SQLException e) {
@@ -40,26 +42,24 @@ public class StudentModel {
     }
 
     public void insert(Student student) {
-        if (conn == null) {
-//            return false;
-        }
         try {
-            String sql = "insert into students (rollNumber, name, phone, email) values (?, ?, ?, ?)";
+            String sql = "insert into students (rollNumber, name, phone, email, createAt, updateAt) values (?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, student.getRollNumber());
             preparedStatement.setString(2, student.getName());
             preparedStatement.setString(3, student.getPhone());
             preparedStatement.setString(4, student.getEmail());
+            preparedStatement.setLong(5, System.currentTimeMillis());
+            preparedStatement.setLong(6, System.currentTimeMillis());
             preparedStatement.executeUpdate();
             System.out.println("Add new student success.");
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
-//        return false;
     }
 
     public Student getById(int id) {
-        Student student = new Student();
+        Student student = null;
         if (conn == null) {
             return null;
         }
@@ -72,8 +72,10 @@ public class StudentModel {
                 String name = rs.getString("name");
                 String phone = rs.getString("phone");
                 String email = rs.getString("email");
+                long createAt = rs.getLong("createAt");
+                long updateAt = rs.getLong("updateAt");
                 int status = rs.getInt("status");
-                student = new Student(studentId, rollNumber, name, phone, email, status);
+                student = new Student(studentId, rollNumber, name, phone, email, createAt, updateAt, status);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -84,12 +86,13 @@ public class StudentModel {
 
     public void update(Student student) {
         try {
-            String sqlUpdate = "UPDATE students SET name=?, phone=?, email=? WHERE id=?";
+            String sqlUpdate = "UPDATE students SET name=?, phone=?, email=?, updateAt=? WHERE id=?";
             PreparedStatement preparedStatement = conn.prepareStatement(sqlUpdate);
             preparedStatement.setString(1, student.getName());
             preparedStatement.setString(2, student.getPhone());
             preparedStatement.setString(3, student.getEmail());
-            preparedStatement.setInt(4, student.getId());
+            preparedStatement.setLong(4, System.currentTimeMillis());
+            preparedStatement.setInt(5, student.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -98,9 +101,10 @@ public class StudentModel {
 
     public void delete(Student student) {
         try {
-            String sqlDelete = "UPDATE students SET status=-1 WHERE id=?";
+            String sqlDelete = "UPDATE students SET status=-1, updateAt=? WHERE id=?";
             PreparedStatement preparedStatement = conn.prepareStatement(sqlDelete);
-            preparedStatement.setInt(1, student.getId());
+            preparedStatement.setLong(1, System.currentTimeMillis());
+            preparedStatement.setInt(2, student.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());

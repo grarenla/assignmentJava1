@@ -8,8 +8,9 @@ public class Student {
     private String name;
     private String phone;
     private String email;
+    private long createAt;
+    private long updateAt;
     private int status;
-
 
     @Override
     public String toString() {
@@ -19,11 +20,25 @@ public class Student {
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
+                ", createAt=" + createAt +
+                ", updateAt=" + updateAt +
                 ", status=" + status +
                 '}';
     }
 
     public Student() {
+    }
+
+    public Student(int id, String rollNumber, String name, String phone, String email, long createAt, long updateAt, int status) {
+        this.id = id;
+        this.rollNumber = rollNumber;
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        // truyền vào ko gọi truyền làm giề?
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+        this.status = status;
     }
 
     public Student(int id, String rollNumber, String name, String phone, String email, int status) {
@@ -32,8 +47,14 @@ public class Student {
         this.name = name;
         this.phone = phone;
         this.email = email;
+        // truyền vào ko gọi truyền làm giề?
+        this.createAt = System.currentTimeMillis();
+        this.updateAt = System.currentTimeMillis();
         this.status = status;
+        // dc rồi
     }
+
+    //    để e tạo cái contructor nữa nhỉ ?
     Scanner scan = new Scanner(System.in);
 
     public int getId() {
@@ -84,4 +105,19 @@ public class Student {
         this.status = status;
     }
 
+    public long getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(long createAt) {
+        this.createAt = createAt;
+    }
+
+    public long getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(long updateAt) {
+        this.updateAt = updateAt;
+    }
 }
